@@ -7,6 +7,7 @@ from drf_yasg.views import get_schema_view
 from netbox.views import APIRootView, HomeView, SearchView
 from users.views import LoginView, LogoutView
 from .admin import admin_site
+from .plugins import registry
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -61,6 +62,8 @@ _patterns = [
     url(r'^admin/', admin_site.urls),
 
 ]
+
+_patterns += registry.urls()
 
 if settings.WEBHOOKS_ENABLED:
     _patterns += [

@@ -33,6 +33,7 @@ from virtualization.filters import ClusterFilter, VirtualMachineFilter
 from virtualization.models import Cluster, VirtualMachine
 from virtualization.tables import ClusterTable, VirtualMachineDetailTable
 from .forms import SearchForm
+from .plugins import registry
 
 SEARCH_MAX_RESULTS = 15
 SEARCH_TYPES = OrderedDict((
@@ -213,7 +214,8 @@ class HomeView(View):
             'stats': stats,
             'topology_maps': TopologyMap.objects.filter(site__isnull=True),
             'report_results': ReportResult.objects.order_by('-created')[:10],
-            'changelog': ObjectChange.objects.select_related('user', 'changed_object_type')[:50]
+            'changelog': ObjectChange.objects.select_related('user', 'changed_object_type')[:50],
+            'plugin_widgets': registry.widgets(),
         })
 
 

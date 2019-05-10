@@ -8,6 +8,7 @@ from markdown import markdown
 
 from utilities.forms import unpack_grouped_choices
 from utilities.utils import foreground_color
+from netbox.plugins import registry
 
 
 register = template.Library()
@@ -169,6 +170,10 @@ def fgcolor(value):
 #
 # Tags
 #
+
+@register.simple_tag
+def navbar_plugins():
+    return registry.navbar_elements()
 
 @register.simple_tag()
 def querystring(request, **kwargs):

@@ -393,6 +393,10 @@
                         </ul>
                     </li>
                 {% endif %}
+                {% navbar_plugins as nbp %}
+                {% for element in nbp %}
+                  {% include element %}
+                {% endfor %}
             </ul>
             {% endif %}
             <ul class="nav navbar-nav navbar-right">

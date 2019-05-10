@@ -170,7 +170,7 @@ INSTALLED_APPS = [
     'utilities',
     'virtualization',
     'drf_yasg',
-]
+] + getattr(configuration, 'INSTALLED_APPS', [])
 
 # Only load django-rq if the webhook backend is enabled
 if WEBHOOKS_ENABLED:
@@ -191,7 +191,7 @@ MIDDLEWARE = (
     'utilities.middleware.LoginRequiredMiddleware',
     'utilities.middleware.APIVersionMiddleware',
     'extras.middleware.ObjectChangeMiddleware',
-)
+) + getattr(configuration, 'MIDDLEWARE', ())
 
 ROOT_URLCONF = 'netbox.urls'
 
