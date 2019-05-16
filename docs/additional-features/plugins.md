@@ -45,4 +45,4 @@ registry.register(MyPlugin())
 ```
 
 And that’s it! The rest is up to you and Django to figure out. If you need a
-template to get started, you might want to look at [this Github repository](#todo).
+template to get started, you might want to look at [this Github repository](https://github.com/hellerve/netbox_example_plugin).
