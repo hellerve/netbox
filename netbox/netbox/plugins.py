@@ -13,6 +13,9 @@ class PluginRegistry:
     def register(self, plugin):
         self.plugins.add(plugin)
 
+    def unregister(self, plugin):
+        self.plugins.remove(plugin)
+
     def navbar_elements(self):
         return [elem for p in self.plugins for elem in p.navbar_elements()]
 
