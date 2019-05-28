@@ -127,6 +127,14 @@ class VLANSerializer(TaggitSerializer, CustomFieldModelSerializer):
 # Prefixes
 #
 
+
+class NetworkSerializer(serializers.Serializer):
+    prefix_length = serializers.IntegerField()
+    prefix = serializers.IPAddressField(required=False)
+    vrf = NestedVRFSerializer(required=False)
+    description = serializers.CharField(required=False)
+
+
 class PrefixSerializer(TaggitSerializer, CustomFieldModelSerializer):
     family = ChoiceField(choices=AF_CHOICES, read_only=True)
     site = NestedSiteSerializer(required=False, allow_null=True)

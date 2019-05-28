@@ -90,29 +90,22 @@ class PrefixViewSet(CustomFieldModelViewSet):
                 raise PermissionDenied()
 
             # Normalize to a list of objects
-            requested_prefixes = request.data if isinstance(request.data, list) else [request.data]
+            serializer = serializers.NetworkSerializer(
+                data=request.data if isinstance(request.data, list) else [request.data],
+                many=True
+            )
+            if not serializer.is_valid():
+                return Response(
+                    serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            requested_prefixes = serializer.data
 
             # Allocate prefixes to the requested objects based on availability within the parent
             for i, requested_prefix in enumerate(requested_prefixes):
 
                 # Validate requested prefix size
-                prefix_length = requested_prefix.get('prefix_length')
-                if prefix_length is None:
-                    return Response(
-                        {
-                            "detail": "Item {}: prefix_length field missing".format(i)
-                        },
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-                try:
-                    prefix_length = int(prefix_length)
-                except ValueError:
-                    return Response(
-                        {
-                            "detail": "Item {}: Invalid prefix length ({})".format(i, prefix_length),
-                        },
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
+                prefix_length = requested_prefix['prefix_length']
                 if prefix.family == 4 and prefix_length > 32:
                     return Response(
                         {
@@ -130,8 +123,8 @@ class PrefixViewSet(CustomFieldModelViewSet):
 
                 # Find the first available prefix equal to or larger than the requested size
                 for available_prefix in available_prefixes.iter_cidrs():
-                    if requested_prefix['prefix_length'] >= available_prefix.prefixlen:
-                        allocated_prefix = '{}/{}'.format(available_prefix.network, requested_prefix['prefix_length'])
+                    if prefix_length >= available_prefix.prefixlen:
+                        allocated_prefix = '{}/{}'.format(available_prefix.network, prefix_length)
                         requested_prefix['prefix'] = allocated_prefix
                         requested_prefix['vrf'] = prefix.vrf.pk if prefix.vrf else None
                         break
